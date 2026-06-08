@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<div class="dashboard-container">
+
+    <!-- SIDEBAR SAME -->
+    <div class="sidebar">
+        <div class="logo">
+            <img src="{{ url_for('static', filename=user_logo_filename) }}" alt="User Profile">
+        </div>
+
+        <h2 class="user-heading">User Panel</h2>
+
+        <ul>
+            <li><a href="{{ url_for('user_dashboard') }}">Dashboard</a></li>
+            <li><a href="{{ url_for('user_events') }}">Events</a></li>
+            <li><a href="{{ url_for('user_bookings') }}">My Bookings</a></li>
+            <li><a href="{{ url_for('user_reports') }}">Report Event</a></li>
+            <li><a href="{{ url_for('user_profile') }}">Profile</a></li>
+            <li><a href="{{ url_for('logout') }}" class="logout-btn">Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main-content">
+
+        <div class="page-header">
+            <h2>Payment</h2>
+            <span class="breadcrumb">Event Payment</span>
+        </div>
+
+        <div class="form-card">
+
+            <h3>{{ event.title }}</h3>
+            <p><strong>Price:</strong> Rs {{ event.price }}</p>
+            <p class="section-summary">This event requires payment. Upload a clear receipt image to confirm your booking.</p>
+
+           <form method="POST" enctype="multipart/form-data" class="payment-form">
+
+    <!-- NAME -->
+    <div class="input-group">
+        <label>Full Name</label>
+        <input type="text" name="name" placeholder="Enter full name" required>
+    </div>
+
+    <!-- EMAIL -->
+    <div class="input-group">
+        <label>Email</label>
+        <input type="email" name="email" placeholder="Enter email" required>
+    </div>
+
+    <!-- AG NUMBER -->
+    <div class="input-group">
+        <label>Registration Number (AG)</label>
+        <input 
+            type="text" 
+            name="ag_number" 
+            placeholder="e.g. xxxx-ag-xxxx"
+            pattern="[0-9]{4}-ag-[0-9]{4,5}"
+            title="Format: xxxx-ag-xxxx"
+            required
+        >
+    </div>
+
+    <!-- PAYMENT METHOD -->
+    <div class="input-group">
+        <label>Payment Method</label>
+        <select name="method" required>
+            <option value="">Select Payment Method</option>
+            <option value="JazzCash">JazzCash</option>
+            <option value="EasyPaisa">EasyPaisa</option>
+            <option value="Bank Transfer">Bank Transfer</option>
+        </select>
+    </div>
+
+    <!-- FILE UPLOAD -->
+    <div class="input-group">
+    <label>Upload Payment Slip</label>
+
+    <div class="file-upload-box">
+        <label class="file-custom-btn">
+            Choose File
+            <input type="file" name="payment_slip" accept="image/*" required>
+        </label>
+
+        <span id="file-name">No file chosen</span>
+    </div>
+</div>
+
+    <!-- BUTTON -->
+    <button type="submit" class="btn-primary full-btn">
+        Confirm Payment
+    </button>
+
+</form>
+
+        </div>
+
+    </div>
+
+</div>
+    {% include 'chatbot.html' %}
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

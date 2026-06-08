@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Profile | Event Management</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="sidebar">
+            <div class="logo">
+                <img src="{{ url_for('static', filename=user_logo_filename) }}" alt="User Profile">
+            </div>
+
+            <h2 class="user-heading">User Panel</h2>
+
+            <ul>
+                <li><a href="{{ url_for('user_dashboard') }}">Dashboard</a></li>
+                <li><a href="{{ url_for('user_events') }}">Events</a></li>
+                <li><a href="{{ url_for('user_bookings') }}">My Bookings</a></li>
+                <li><a href="{{ url_for('user_reports') }}">Report Event</a></li>
+                <li><a href="{{ url_for('user_profile') }}" class="active">Profile</a></li>
+                <li><a href="{{ url_for('logout') }}" class="logout-btn">Logout</a></li>
+            </ul>
+        </div>
+
+        <div class="main-content">
+            <div class="page-header">
+                <h2>User Profile</h2>
+                <span class="breadcrumb">Dashboard / Profile</span>
+            </div>
+
+            {% if success %}
+                <div class="success-message">{{ success }}</div>
+            {% endif %}
+
+            {% if error %}
+                <div class="error-message">{{ error }}</div>
+            {% endif %}
+
+            <div class="profile-card">
+                <div class="profile-preview">
+                    <img src="{{ url_for('static', filename=user_logo_filename) }}" alt="User Profile">
+                    <h3>{{ user.first_name }} {{ user.last_name }}</h3>
+                    <p>{{ user.email }}</p>
+                </div>
+
+                <form method="POST" enctype="multipart/form-data" class="profile-form">
+                    <div class="form-grid">
+                        <div>
+                            <label>First Name</label>
+                            <input type="text" name="first_name" value="{{ user.first_name or '' }}" required>
+                        </div>
+
+                        <div>
+                            <label>Last Name</label>
+                            <input type="text" name="last_name" value="{{ user.last_name or '' }}" required>
+                        </div>
+
+                        <div>
+                            <label>Email Address</label>
+                            <input type="email" name="email" value="{{ user.email or '' }}" required>
+                        </div>
+
+                        <div>
+                            <label>Phone Number</label>
+                            <input type="text" name="phone" value="{{ user.phone or '' }}" placeholder="Phone Number">
+                        </div>
+
+                        <div>
+                            <label>Campus</label>
+                            <input type="text" name="campus" value="{{ user.campus or '' }}" placeholder="Campus">
+                        </div>
+
+                        <div>
+                            <label>Department</label>
+                            <input type="text" name="department" value="{{ user.department or '' }}" placeholder="Department">
+                        </div>
+                    </div>
+
+                    <div class="password-change-section">
+                        <h3>Change Password</h3>
+                        <div class="form-grid">
+                            <div>
+                                <label>Current Password</label>
+                                <input type="password" name="current_password" id="user-current-password" placeholder="Current Password">
+                            </div>
+
+                            <div>
+                                <label>New Password</label>
+                                <input type="password" name="new_password" id="user-new-password" placeholder="New Password">
+                            </div>
+                        </div>
+
+                        <div class="form-options password-change-toggle">
+                            <label>
+                                Show Current Password <input type="checkbox" data-password-toggle="user-current-password">
+                            </label>
+                            <label>
+                                Show New Password <input type="checkbox" data-password-toggle="user-new-password">
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="file-upload-box profile-upload">
+                        <label class="file-label">Profile Picture</label>
+                        <div class="file-input-wrapper">
+                            <input type="file" id="profileImageUpload" name="profile_image" accept="image/*">
+                            <label for="profileImageUpload" class="file-custom-btn">Choose Image</label>
+                            <span id="file-name">No image selected</span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary">Update Profile</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% include 'chatbot.html' %}
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Event | Admin</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="dashboard-container">
+
+    <!-- SAME SIDEBAR -->
+    <div class="sidebar">
+        <div class="logo">
+            <img src="{{ url_for('static', filename=admin_logo_filename) }}" alt="Admin Profile">
+        </div>
+        <h2 class="admin-heading">Admin Panel</h2>
+        <ul>
+            <li><a href="{{ url_for('admin_dashboard') }}">Dashboard</a></li>
+            <li><a href="{{ url_for('manage_events') }}">Manage Events</a></li>
+            <li><a href="{{ url_for('add_event') }}">Add Event</a></li>
+            <li><a href="{{ url_for('admin_profile') }}">Profile</a></li>
+            <li><a href="{{ url_for('logout') }}" class="logout-btn">Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="main-content">
+
+        <!-- HEADER SAME STYLE -->
+        <div class="page-header">
+            <h2>Edit Event</h2>
+            <span class="breadcrumb">Dashboard / Edit Event</span>
+        </div>
+
+        {% if error %}
+            <div class="error-message">{{ error }}</div>
+        {% endif %}
+
+        <!-- FORM CARD -->
+        <form method="POST" enctype="multipart/form-data">
+
+    <div class="form-grid">
+
+        <div>
+            <label>Event Name*</label>
+            <input type="text" name="title" value="{{ event.title }}" required>
+        </div>
+
+        <div>
+            <label>Category*</label>
+            <input type="text" name="category" value="{{ event.category }}">
+        </div>
+
+        <div>
+            <label>Phone Number*</label>
+            <input type="text" name="phone" value="{{ event.phone or '' }}">
+        </div>
+
+        <div>
+            <label>Venue*</label>
+            <input type="text" name="venue" value="{{ event.venue }}">
+        </div>
+
+        <div>
+            <label>City*</label>
+            <input type="text" name="city" value="{{ event.city }}">
+        </div>
+
+        <div>
+            <label>Start Date*</label>
+            <input type="date" name="start_date" value="{{ event.start_date }}">
+        </div>
+
+        <div>
+            <label>End Date*</label>
+            <input type="date" name="end_date" value="{{ event.end_date }}">
+        </div>
+
+        <div>
+            <label>Event Payment</label>
+            <input type="number" name="price" min="0" step="0.01" value="{{ event.price if event.price else '' }}" placeholder="Leave empty for free event">
+        </div>
+
+    </div>
+
+    <!-- IMAGE SECTION -->
+    <div class="file-upload-box">
+    <label class="file-label">Current Image</label>
+
+    {% if event.image %}
+        <div class="current-image-preview">
+            <img src="{{ url_for('static', filename='uploads/' + event.image) }}"
+                 class="current-event-image">
+        </div>
+    {% else %}
+        <p class="no-image-note">No image uploaded</p>
+    {% endif %}
+
+    <label class="file-label">Change Image (Optional)</label>
+
+    <div class="file-input-wrapper">
+
+        <input type="file" id="imageUpload" name="image" accept="image/*">
+
+        <label for="imageUpload" class="file-custom-btn">
+            Choose Image
+        </label>
+
+        <span id="file-name">No image selected</span>
+
+    </div>
+</div>
+
+   <div class="form-full">
+        <label>Description*</label>
+        <textarea name="description" rows="4">{{ event.description }}</textarea>
+    </div>
+
+
+    <button type="submit" class="btn-primary">Update Event</button>
+
+</form>
+
+    </div>
+</div>
+
+    {% include 'chatbot.html' %}
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

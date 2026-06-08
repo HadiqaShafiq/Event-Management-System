@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Bookings</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<div class="dashboard-container">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="logo">
+            <img src="{{ url_for('static', filename=user_logo_filename) }}" alt="User Profile">
+        </div>
+
+        <h2 class="user-heading">User Panel</h2>
+
+        <ul>
+            <li><a href="{{ url_for('user_dashboard') }}">Dashboard</a></li>
+            <li><a href="{{ url_for('user_events') }}">Events</a></li>
+            <li><a href="{{ url_for('user_bookings') }}" class="active">My Bookings</a></li>
+            <li><a href="{{ url_for('user_reports') }}">Report Event</a></li>
+            <li><a href="{{ url_for('user_profile') }}">Profile</a></li>
+            <li><a href="{{ url_for('logout') }}" class="logout-btn">Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main-content">
+
+        <div class="page-header">
+            <h2>My Bookings</h2>
+            <span class="breadcrumb">Home / Bookings</span>
+        </div>
+
+        <!-- TOTAL BOOKINGS -->
+        <div class="section-summary">
+            <h3>Total Bookings: {{ bookings|length }}</h3>
+        </div>
+
+        <!-- SEARCH + CLEAR -->
+        <form method="GET" action="{{ url_for('user_bookings') }}" class="search-form">
+            
+            <input type="text" name="search" placeholder="Search by event name or venue"
+                   class="search-input">
+
+            <button type="submit" class="btn btn-add">
+                Search
+            </button>
+
+            <a href="{{ url_for('user_bookings') }}" class="btn btn-delete">
+                Clear
+            </a>
+
+        </form>
+
+        <div class="form-card">
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Event</th>
+                        <th>Venue</th>
+                        <th>Date</th>
+                        <th>Event Status</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for booking in bookings %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ booking.event.title }}</td>
+                        <td>{{ booking.event.venue }}</td>
+                        <td>{{ booking.event.start_date }}</td>
+                        <td>
+                            {% if event_has_ended(booking.event) %}
+                                <span class="status-badge status-ended">Ended</span>
+                            {% elif event_status_label(booking.event) == 'Ongoing' %}
+                                <span class="status-badge status-approved">Ongoing</span>
+                            {% else %}
+                                <span class="status-badge status-pending">Upcoming</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ booking.payment_status }}</td>
+                        <td>
+        <a href="{{ url_for('user_event_details', event_id=booking.event.id) }}"
+           class="btn btn-add">
+            Details
+        </a>
+    </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="7">No bookings yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+    {% include 'chatbot.html' %}
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

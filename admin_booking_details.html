@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Booking Details | Admin</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <div class="sidebar">
+        <div class="logo">
+          <img src="{{ url_for('static', filename=admin_logo_filename) }}" alt="Admin Profile" />
+        </div>
+        <h2 class="admin-heading">Admin Panel</h2>
+        <ul>
+          <li><a href="{{ url_for('admin_dashboard') }}">Dashboard</a></li>
+          <li><a href="{{ url_for('manage_events') }}">Events</a></li>
+          <li><a href="{{ url_for('add_event') }}">Add Event</a></li>
+          <li><a href="{{ url_for('admin_bookings') }}" class="active">Bookings</a></li>
+          <li><a href="{{ url_for('admin_users') }}">Users</a></li>
+          <li><a href="{{ url_for('admin_reports') }}">Reports</a></li>
+          <li><a href="{{ url_for('admin_profile') }}">Profile</a></li>
+          <li><a href="{{ url_for('logout') }}" class="logout-btn">Logout</a></li>
+        </ul>
+      </div>
+
+      <div class="main-content">
+        <div class="page-header">
+          <h2>Booking Details</h2>
+          <span class="breadcrumb">Dashboard / Bookings / Details</span>
+        </div>
+
+        <div class="booking-detail-layout">
+          <div class="form-card">
+            <h3>User Details</h3>
+            <div class="detail-item"><strong>Name:</strong> {{ booking.user.first_name }} {{ booking.user.last_name }}</div>
+            <div class="detail-item"><strong>Email:</strong> {{ booking.user.email }}</div>
+            <div class="detail-item"><strong>Phone:</strong> {{ booking.user.phone or 'N/A' }}</div>
+            <div class="detail-item"><strong>Registration No:</strong> {{ booking.user.reg_no or 'N/A' }}</div>
+            <div class="detail-item"><strong>Campus:</strong> {{ booking.user.campus or 'N/A' }}</div>
+            <div class="detail-item"><strong>Department:</strong> {{ booking.user.department or 'N/A' }}</div>
+            <div class="detail-item"><strong>Role:</strong> {{ booking.user.role|title }}</div>
+            <div class="detail-item"><strong>User Status:</strong> {{ booking.user.status|title }}</div>
+          </div>
+
+          <div class="form-card">
+            <h3>Event Details</h3>
+            <div class="detail-item"><strong>Event:</strong> {{ booking.event.title }}</div>
+            <div class="detail-item"><strong>Category:</strong> {{ booking.event.category or 'N/A' }}</div>
+            <div class="detail-item"><strong>Venue:</strong> {{ booking.event.venue or 'N/A' }}</div>
+            <div class="detail-item"><strong>Campus/City:</strong> {{ booking.event.city or 'N/A' }}</div>
+            <div class="detail-item"><strong>Start Date:</strong> {{ booking.event.start_date }}</div>
+            <div class="detail-item"><strong>End Date:</strong> {{ booking.event.end_date }}</div>
+            <div class="detail-item">
+              <strong>Event Status:</strong>
+              {% if event_has_ended(booking.event) %}
+                <span class="status-badge status-ended">Ended</span>
+              {% elif event_status_label(booking.event) == 'Ongoing' %}
+                <span class="status-badge status-approved">Ongoing</span>
+              {% else %}
+                <span class="status-badge status-pending">Upcoming</span>
+              {% endif %}
+            </div>
+            <div class="detail-item">
+              <strong>Price:</strong>
+              {% if booking.event.price and booking.event.price > 0 %}
+                Rs {{ booking.event.price }}
+              {% else %}
+                Free
+              {% endif %}
+            </div>
+            <div class="detail-item"><strong>Payment Status:</strong> {{ booking.payment_status }}</div>
+          </div>
+        </div>
+
+        <div class="form-card booking-receipt-card">
+          <h3>Payment Receipt</h3>
+          {% if booking.payment_receipt %}
+            <div class="receipt-preview">
+              <img src="{{ url_for('static', filename='uploads/' + booking.payment_receipt) }}" alt="Payment receipt">
+            </div>
+            <a href="{{ url_for('static', filename='uploads/' + booking.payment_receipt) }}" class="btn btn-add" target="_blank">Open Full Receipt</a>
+          {% else %}
+            <p class="section-summary">No receipt was uploaded for this booking.</p>
+          {% endif %}
+        </div>
+
+        <div class="event-actions">
+          <a href="{{ url_for('admin_bookings') }}" class="btn btn-add">Back to Bookings</a>
+          <a href="{{ url_for('delete_booking', booking_id=booking.id) }}" class="btn btn-delete">Delete Booking</a>
+        </div>
+      </div>
+    </div>
+    {% include 'chatbot.html' %}
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  </body>
+</html>

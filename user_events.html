@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Events | User Dashboard</title>
+
+    <link rel="icon" type="image/png"
+          href="{{ url_for('static', filename='images/favicon.png') }}">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<div class="dashboard-container">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="logo">
+            <img src="{{ url_for('static', filename=user_logo_filename) }}" alt="User Profile">
+        </div>
+
+        <h2 class="user-heading">User Panel</h2>
+
+        <ul>
+            <li><a href="{{ url_for('user_dashboard') }}">Dashboard</a></li>
+
+            <li><a href="{{ url_for('user_events') }}" class="active">Events</a></li>
+
+            <li><a href="{{ url_for('user_bookings') }}">My Bookings</a></li>
+            <li><a href="{{ url_for('user_reports') }}">Report Event</a></li>
+            <li><a href="{{ url_for('user_profile') }}">Profile</a></li>
+
+            <li><a href="{{ url_for('logout') }}" class="logout-btn">Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+        <div class="page-header">
+            <h2>Available Events</h2>
+            <span class="breadcrumb">Browse & Book Events</span>
+        </div>
+
+        <!-- TOTAL EVENTS -->
+        <div class="section-summary">
+            <h3>Total Events: {{ events|length }}</h3>
+        </div>
+
+        <!-- SEARCH + CLEAR -->
+        <form method="GET" action="{{ url_for('user_events') }}" class="search-form">
+            
+            <input type="text" name="search" placeholder="Search by event name or city"
+                   class="search-input">
+
+            <button type="submit" class="btn btn-add">
+                Search
+            </button>
+
+            <a href="{{ url_for('user_events') }}" class="btn btn-delete">
+                Clear
+            </a>
+
+        </form>
+
+        <!-- EVENTS TABLE -->
+        <div class="form-card">
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Event Name</th>
+                        <th>City</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Price</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for event in events %}
+                    <tr>
+
+                        <td>{{ loop.index }}</td>
+
+                        <td>{{ event.title }}</td>
+
+                        <td>{{ event.city }}</td>
+
+                        <td>{{ event.start_date }} - {{ event.end_date }}</td>
+
+                        <td>
+                            {% if event_has_ended(event) %}
+                                <span class="status-badge status-ended">Ended</span>
+                            {% elif event_status_label(event) == 'Ongoing' %}
+                                <span class="status-badge status-approved">Ongoing</span>
+                            {% else %}
+                                <span class="status-badge status-pending">Upcoming</span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if event.price and event.price > 0 %}
+                                Rs {{ event.price }}
+                            {% else %}
+                                Free
+                            {% endif %}
+                        </td>
+
+                        <td>
+
+                            <!-- DETAILS -->
+                            <a href="{{ url_for('user_event_details', event_id=event.id) }}"
+                               class="btn btn-add">
+                                Details
+                            </a>
+
+                            <!-- BOOK / ALREADY BOOKED -->
+                            {% if event_has_ended(event) %}
+
+                                <button class="btn btn-disabled" disabled>
+                                    Event Ended
+                                </button>
+
+                            {% elif event.id in booked_event_ids %}
+
+                                <button class="btn btn-disabled" disabled>
+                                    Already Booked
+                                </button>
+
+                            {% else %}
+
+                                <a href="{{ url_for('book_event', event_id=event.id) }}"
+                                   class="btn btn-book">
+                                    Book Now
+                                </a>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                    {% else %}
+                    <tr>
+                        <td colspan="7">No events available.</td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+    {% include 'chatbot.html' %}
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
+

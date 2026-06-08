@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Management System | Home</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="home-page">
+    <header class="home-navbar">
+        <a href="{{ url_for('home') }}" class="home-brand">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Event Management Logo">
+            <span>
+                <strong>EventPro</strong>
+                <small>Management System</small>
+            </span>
+        </a>
+
+        <nav class="home-nav-links" aria-label="Main navigation">
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="#about">About</a>
+            <a href="{{ url_for('login') }}" class="home-login-link">Login</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="home-hero" id="home">
+            <div class="home-hero-content">
+                <span class="home-kicker">Campus Events Made Simple</span>
+                <h1>Event <span>Management</span> System</h1>
+                <p>
+                    Plan, manage, book, and track events from one organized platform
+                    built for students, users, and administrators.
+                </p>
+
+                <div class="home-actions">
+                    <a href="{{ url_for('login') }}" class="home-primary-btn">Get Started</a>
+                    <a href="#about" class="home-secondary-btn">Learn More</a>
+                </div>
+            </div>
+
+            <div class="home-overview-card" aria-label="Event system quick overview">
+                <div class="overview-accent"></div>
+                <h2>Quick Overview</h2>
+                <p>Event Statistics</p>
+
+                <div class="overview-grid">
+                    <div>
+                        <strong>50+</strong>
+                        <span>Campus Events</span>
+                    </div>
+                    <div>
+                        <strong>1,200+</strong>
+                        <span>Registered Users</span>
+                    </div>
+                    <div>
+                        <strong>24/7</strong>
+                        <span>Online Booking</span>
+                    </div>
+                    <div>
+                        <strong>98%</strong>
+                        <span>Easy Management</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="home-about-section" id="about">
+            <div class="home-section-inner">
+                <span class="home-kicker">About The System</span>
+                <h2>Our Objectives</h2>
+                <p>
+                    We aim to provide a modern, efficient, and transparent event management
+                    system where users can discover events easily and admins can manage every
+                    event workflow with confidence.
+                </p>
+
+                <div class="objectives-grid">
+                    <article class="objective-card">
+                        <div class="objective-icon">E</div>
+                        <h3>Event Planning</h3>
+                        <p>Create, update, and organize campus events with clear details, dates, venues, and categories.</p>
+                    </article>
+
+                    <article class="objective-card">
+                        <div class="objective-icon">B</div>
+                        <h3>Easy Booking</h3>
+                        <p>Help users browse available events and reserve their spot through a simple booking process.</p>
+                    </article>
+
+                    <article class="objective-card">
+                        <div class="objective-icon">R</div>
+                        <h3>Report System</h3>
+                        <p>Allow users to report event issues so admins can review concerns and keep events running smoothly.</p>
+                    </article>
+
+                    <article class="objective-card">
+                        <div class="objective-icon">A</div>
+                        <h3>Role Management</h3>
+                        <p>Maintain separate admin and user access so each person sees the tools meant for their role.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+    </main>
+    {% include 'chatbot.html' %}
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

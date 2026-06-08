@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manage Events</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="dashboard-container">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="logo">
+            <img src="{{ url_for('static', filename=admin_logo_filename) }}" alt="Admin Profile">
+        </div>
+        <h2 class="admin-heading">Admin Panel</h2>
+        <ul>
+            <li><a href="{{ url_for('admin_dashboard') }}">Dashboard</a></li>
+            <li><a href="{{ url_for('manage_events') }}">Events</a></li>
+            <li><a href="{{ url_for('add_event') }}">Add Event</a></li>
+            <li><a href="{{ url_for('admin_bookings') }}">Bookings</a></li>
+            <li><a href="{{ url_for('admin_users') }}">Users</a></li>
+            <li><a href="{{ url_for('admin_reports') }}">Reports</a></li>
+            <li><a href="{{ url_for('admin_profile') }}">Profile</a></li>
+            <li><a href="{{ url_for('logout') }}" class="logout-btn">Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="main-content">
+
+        <div class="page-header">
+            <h2>Manage Events</h2>
+        </div>
+
+        {% if success %}
+            <div class="success-message">{{ success }}</div>
+        {% endif %}
+
+        <!-- ✅ SEARCH BAR -->
+        <form method="GET" action="{{ url_for('manage_events') }}" class="search-form-simple">
+            <input type="text" name="search" placeholder="Search by event name or category"
+                   class="search-input">
+
+            <button type="submit" class="btn btn-add">Search</button>
+
+            <a href="{{ url_for('manage_events') }}" class="btn btn-delete">
+                Clear
+            </a>
+        </form>
+
+        <!-- TABLE -->
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Event Name</th>
+                    <th>Category</th>
+                    <th>Venue</th>
+                    <th>City</th>
+                    <th>Start</th>
+                    <th>End</th>
+                    <th>Status</th>
+                    <th>Price (PKR)</th>
+                    <th>Image</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for event in events %}
+                <tr>
+                    <td>{{ event.id }}</td>
+                    <td>{{ event.title }}</td>
+                    <td>{{ event.category }}</td>
+                    <td>{{ event.venue }}</td>
+                    <td>{{ event.city }}</td>
+                    <td>{{ event.start_date }}</td>
+                    <td>{{ event.end_date }}</td>
+                    <td>
+                        {% if event_has_ended(event) %}
+                            <span class="status-badge status-ended">Ended</span>
+                        {% elif event_status_label(event) == 'Ongoing' %}
+                            <span class="status-badge status-approved">Ongoing</span>
+                        {% else %}
+                            <span class="status-badge status-pending">Upcoming</span>
+                        {% endif %}
+                    </td>
+
+                    <!-- PKR FIX -->
+                    <td>
+                        {% if event.price and event.price > 0 %}
+                            Rs {{ event.price }}
+                        {% else %}
+                            Free
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if event.image %}
+                            <img src="{{ url_for('static', filename='uploads/' + event.image) }}" width="60">
+                        {% else %}
+                            No Image
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        <a href="{{ url_for('edit_event', event_id=event.id) }}" class="btn btn-add">Edit</a>
+                        <a href="{{ url_for('delete_event', event_id=event.id) }}"
+                           class="btn btn-delete">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="11">No events found</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+</div>
+    {% include 'chatbot.html' %}
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

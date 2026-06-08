@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Reports</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<div class="dashboard-container">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="logo">
+            <img src="{{ url_for('static', filename=user_logo_filename) }}" alt="User Profile">
+        </div>
+
+        <h2 class="user-heading">User Panel</h2>
+
+        <ul>
+            <li><a href="{{ url_for('user_dashboard') }}">Dashboard</a></li>
+            <li><a href="{{ url_for('user_events') }}">Events</a></li>
+            <li><a href="{{ url_for('user_bookings') }}">My Bookings</a></li>
+            <li><a href="{{ url_for('user_reports') }}" class="active">My Reports</a></li>
+            <li><a href="{{ url_for('user_profile') }}">Profile</a></li>
+            <li><a href="{{ url_for('logout') }}" class="logout-btn">Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+        <div class="page-header">
+            <h2>My Reports</h2>
+            <span class="breadcrumb">Reports / List</span>
+        </div>
+
+        <!-- ADD REPORT BUTTON -->
+        <a href="{{ url_for('new_report') }}" class="btn btn-add">
+            + Report Here
+        </a>
+
+        <br><br>
+
+        <!-- TOTAL REPORTS -->
+        <div class="section-summary">
+            <h3>Total Reports: {{ issues|length }}</h3>
+        </div>
+
+        <!-- SEARCH + CLEAR -->
+        <form method="GET" action="{{ url_for('user_reports') }}" class="search-form">
+            
+            <input type="text" name="search" placeholder="Search by event, subject, or campus"
+                   class="search-input">
+
+            <button type="submit" class="btn btn-add">
+                Search
+            </button>
+
+            <a href="{{ url_for('user_reports') }}" class="btn btn-delete">
+                Clear
+            </a>
+
+        </form>
+
+        <!-- REPORT TABLE -->
+        <div class="form-card">
+
+            <table>
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Event</th>
+            <th>Campus</th>
+            <th>Subject</th>
+            <th>Message</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for issue in issues %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ issue.event_name }}</td>
+            <td>{{ issue.campus }}</td>
+            <td>{{ issue.subject }}</td>
+            <td>{{ issue.message }}</td>
+            <td>{{ issue.created_at }}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="6">No reports yet</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+        </div>
+
+    </div>
+
+</div>
+    {% include 'chatbot.html' %}
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Users | Admin</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="dashboard-container">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+            <img src="{{ url_for('static', filename=admin_logo_filename) }}" alt="Admin Profile">
+        </div>
+        <h2 class="admin-heading">Admin Panel</h2>
+        <ul>
+            <li><a href="{{ url_for('admin_dashboard') }}">Dashboard</a></li>
+            <li><a href="{{ url_for('manage_events') }}">Events</a></li>
+            <li><a href="{{ url_for('add_event') }}">Add Event</a></li>
+            <li><a href="{{ url_for('admin_bookings') }}">Bookings</a></li>
+            <li><a href="{{ url_for('admin_users') }}">Users</a></li>
+            <li><a href="{{ url_for('admin_reports') }}">Reports</a></li>
+            <li><a href="{{ url_for('admin_profile') }}">Profile</a></li>
+            <li><a href="{{ url_for('logout') }}" class="logout-btn">Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main-content">
+
+        <div class="page-header">
+            <h2>Registered Users</h2>
+            <span class="breadcrumb">Dashboard / Users</span>
+        </div>
+
+        <!-- TOTAL USERS -->
+        <div class="section-summary">
+            <h3>Total Users: {{ users|length }}</h3>
+        </div>
+
+        <!-- SEARCH + CLEAR -->
+        <form method="GET" action="{{ url_for('admin_users') }}"
+              class="search-form">
+
+            <input type="text" name="search" placeholder="Search by name or email"
+                   class="search-input">
+
+            <button type="submit" class="btn btn-add">
+                Search
+            </button>
+
+            <a href="{{ url_for('admin_users') }}" class="btn btn-delete">
+                Clear
+            </a>
+
+        </form>
+
+        <div class="form-card">
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Reg No</th>
+                        <th>Campus</th>
+                        <th>Department</th>
+                        <th>Status</th>
+                        <th>Role</th>
+                        <th>Registered</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for u in users %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ u.first_name }} {{ u.last_name }}</td>
+                        <td>{{ u.email }}</td>
+                        <td>{{ u.reg_no or 'N/A' }}</td>
+                        <td>{{ u.campus or 'N/A' }}</td>
+                        <td>{{ u.department }}</td>
+                        <td>
+                            {% if u.status == 'pending' %}
+                                <span class="status-badge status-pending">Pending</span>
+                            {% elif u.status == 'approved' %}
+                                <span class="status-badge status-approved">Approved</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if u.role == 'admin' %}
+                                <span class="status-badge status-admin">Admin</span>
+                            {% else %}
+                                User
+                            {% endif %}
+                        </td>
+                        <td>{{ u.created_at }}</td>
+
+                        <td>
+                            {% if u.id == session["user_id"] %}
+                                <span class="current-admin-small">Current Admin</span>
+                            {% else %}
+                                <div class="action-buttons">
+                                {% if u.status == 'pending' and u.role == 'user' %}
+                                    <a href="{{ url_for('approve_user', user_id=u.id) }}" class="btn-small btn-approve">Accept</a>
+                                {% endif %}
+                                    <a href="{{ url_for('delete_user', user_id=u.id) }}" class="btn-small btn-remove">Delete</a>
+                                </div>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="10">No users found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+    {% include 'chatbot.html' %}
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
+
+

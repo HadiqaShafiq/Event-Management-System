@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Bookings | Admin</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <div class="logo">
+          <img
+            src="{{ url_for('static', filename=admin_logo_filename) }}"
+            alt="Admin Profile"
+          />
+        </div>
+        <h2 class="admin-heading">Admin Panel</h2>
+        <ul>
+          <li>
+            <a href="{{ url_for('admin_dashboard') }}#overview-section"
+              >Dashboard</a
+            >
+          </li>
+          <li>
+            <a href="{{ url_for('manage_events') }}#events-section">Events</a>
+          </li>
+          <li><a href="{{ url_for('add_event') }}">Add Event</a></li>
+          <li>
+            <a href="{{ url_for('admin_bookings') }}#bookings-section"
+              >Bookings</a
+            >
+          </li>
+          <li>
+            <a href="{{ url_for('admin_users') }}#users-section">Users</a>
+          </li>
+          <li>
+            <a href="{{ url_for('admin_reports') }}#issues-section"
+              >Reports</a
+            >
+          </li>
+          <li>
+            <a href="{{ url_for('admin_profile') }}">Profile</a>
+          </li>
+          <li>
+            <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- MAIN CONTENT -->
+      <div class="main-content">
+        <div class="page-header">
+          <h2>All Bookings</h2>
+          <span class="breadcrumb">Dashboard / Bookings</span>
+        </div>
+
+        {% if success %}
+          <div class="success-message">{{ success }}</div>
+        {% endif %}
+
+        <!-- TOTAL BOOKINGS -->
+        <div class="section-summary">
+          <h3>Total Bookings: {{ bookings|length }}</h3>
+        </div>
+
+        <!-- SEARCH + CLEAR -->
+        <form method="GET" action="{{ url_for('admin_bookings') }}" class="search-form">
+          
+          <input type="text" name="search" placeholder="Search by email or event"
+                 class="search-input">
+
+          <button type="submit" class="btn btn-add">
+            Search
+          </button>
+
+          <a href="{{ url_for('admin_bookings') }}" class="btn btn-delete">
+            Clear
+          </a>
+
+        </form>
+
+        <div class="form-card">
+          <table>
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>User Email</th>
+                <th>Event</th>
+                <th>Event Status</th>
+                <th>Payment Status</th>
+                <th>Receipt</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for b in bookings %}
+              <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ b.user.email }}</td>
+                <td>{{ b.event.title }}</td>
+                <td>
+                  {% if event_has_ended(b.event) %}
+                    <span class="status-badge status-ended">Ended</span>
+                  {% elif event_status_label(b.event) == 'Ongoing' %}
+                    <span class="status-badge status-approved">Ongoing</span>
+                  {% else %}
+                    <span class="status-badge status-pending">Upcoming</span>
+                  {% endif %}
+                </td>
+                <td>{{ b.payment_status }}</td>
+                <td>
+                  {% if b.payment_receipt %}
+                    <a href="{{ url_for('static', filename='uploads/' + b.payment_receipt) }}" class="btn btn-add" target="_blank">View</a>
+                  {% else %}
+                    N/A
+                  {% endif %}
+                </td>
+                <td>
+                  <a
+                    href="{{ url_for('admin_booking_details', booking_id=b.id) }}"
+                    class="btn btn-add"
+                  >
+                    Details
+                  </a>
+
+                  <a
+                    href="{{ url_for('delete_booking', booking_id=b.id) }}"
+                    class="btn btn-delete"
+                  >
+                    Delete
+                  </a>
+                </td>
+              </tr>
+              {% else %}
+              <tr>
+                <td colspan="7">No bookings found</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    {% include 'chatbot.html' %}
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
+

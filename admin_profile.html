@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Profile | Event Management</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="sidebar">
+            <div class="logo">
+                <img src="{{ url_for('static', filename=admin_logo_filename) }}" alt="Admin Profile">
+            </div>
+            <h2 class="admin-heading">Admin Panel</h2>
+            <ul>
+                <li><a href="{{ url_for('admin_dashboard') }}">Dashboard</a></li>
+                <li><a href="{{ url_for('manage_events') }}">Events</a></li>
+                <li><a href="{{ url_for('add_event') }}">Add Event</a></li>
+                <li><a href="{{ url_for('admin_bookings') }}">Bookings</a></li>
+                <li><a href="{{ url_for('admin_users') }}">Users</a></li>
+                <li><a href="{{ url_for('admin_reports') }}">Reports</a></li>
+                <li><a href="{{ url_for('admin_profile') }}" class="active">Profile</a></li>
+                <li><a href="{{ url_for('logout') }}" class="logout-btn">Logout</a></li>
+            </ul>
+        </div>
+
+        <div class="main-content">
+            <div class="page-header">
+                <h2>Admin Profile</h2>
+                <span class="breadcrumb">Dashboard / Profile</span>
+            </div>
+
+            {% if success %}
+                <div class="success-message">{{ success }}</div>
+            {% endif %}
+
+            {% if error %}
+                <div class="error-message">{{ error }}</div>
+            {% endif %}
+
+            <div class="profile-card">
+                <div class="profile-preview">
+                    <img src="{{ url_for('static', filename=admin_logo_filename) }}" alt="Admin Profile">
+                    <h3>{{ admin.first_name }} {{ admin.last_name }}</h3>
+                    <p>{{ admin.email }}</p>
+                </div>
+
+                <form method="POST" enctype="multipart/form-data" class="profile-form">
+                    <div class="form-grid">
+                        <div>
+                            <label>First Name</label>
+                            <input type="text" name="first_name" value="{{ admin.first_name or '' }}" required>
+                        </div>
+
+                        <div>
+                            <label>Last Name</label>
+                            <input type="text" name="last_name" value="{{ admin.last_name or '' }}" required>
+                        </div>
+
+                        <div>
+                            <label>Email Address</label>
+                            <input type="email" name="email" value="{{ admin.email or '' }}" required>
+                        </div>
+
+                        <div>
+                            <label>Phone Number</label>
+                            <input type="text" name="phone" value="{{ admin.phone or '' }}" placeholder="Phone Number">
+                        </div>
+
+                        <div>
+                            <label>Campus</label>
+                            <input type="text" name="campus" value="{{ admin.campus or '' }}" placeholder="Campus">
+                        </div>
+
+                        <div>
+                            <label>Department</label>
+                            <input type="text" name="department" value="{{ admin.department or '' }}" placeholder="Department">
+                        </div>
+                    </div>
+
+                    <div class="password-change-section">
+                        <h3>Change Password</h3>
+                        <div class="form-grid">
+                            <div>
+                                <label>Current Password</label>
+                                <input type="password" name="current_password" id="admin-current-password" placeholder="Current Password">
+                            </div>
+
+                            <div>
+                                <label>New Password</label>
+                                <input type="password" name="new_password" id="admin-new-password" placeholder="New Password">
+                            </div>
+                        </div>
+
+                        <div class="form-options password-change-toggle">
+                            <label>
+                                Show Current Password <input type="checkbox" data-password-toggle="admin-current-password">
+                            </label>
+                            <label>
+                                Show New Password <input type="checkbox" data-password-toggle="admin-new-password">
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="file-upload-box profile-upload">
+                        <label class="file-label">Profile Picture</label>
+                        <div class="file-input-wrapper">
+                            <input type="file" id="profileImageUpload" name="profile_image" accept="image/*">
+                            <label for="profileImageUpload" class="file-custom-btn">Choose Image</label>
+                            <span id="file-name">No image selected</span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary">Update Profile</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% include 'chatbot.html' %}
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

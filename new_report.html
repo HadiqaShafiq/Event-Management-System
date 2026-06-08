@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Report Event</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<div class="dashboard-container">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="logo">
+            <img src="{{ url_for('static', filename=user_logo_filename) }}" alt="User Profile">
+        </div>
+
+        <h2 class="user-heading">User Panel</h2>
+
+        <ul>
+            <li><a href="{{ url_for('user_dashboard') }}">Dashboard</a></li>
+            <li><a href="{{ url_for('user_events') }}">Events</a></li>
+            <li><a href="{{ url_for('user_bookings') }}">My Bookings</a></li>
+            <li><a href="{{ url_for('user_reports') }}" >My Report</a></li>
+            <li><a href="{{ url_for('user_profile') }}">Profile</a></li>
+            <li><a href="{{ url_for('logout') }}" class="logout-btn">Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main-content">
+
+        <div class="page-header">
+            <h2>Report a Problem</h2>
+            <span class="breadcrumb">Help / Report</span>
+        </div>
+
+        <div class="form-card">
+
+            <form method="POST">
+
+                <div class="input-group">
+                    <label>Event Name</label>
+                    <input type="text" name="event_name" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Campus</label>
+                    <input type="text" name="campus" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Subject</label>
+                    <input type="text" name="subject" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Message</label>
+                    <textarea name="message" rows="5" required></textarea>
+                </div>
+
+                <button type="submit" class="btn-primary full-btn">
+                    Submit Report
+                </button>
+
+                <button type="button" data-history-back class="btn btn-delete">
+                        Back
+                    </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+    {% include 'chatbot.html' %}
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

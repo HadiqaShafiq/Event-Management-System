@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reports | Admin</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="dashboard-container">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+            <img src="{{ url_for('static', filename=admin_logo_filename) }}" alt="Admin Profile">
+        </div>
+        <h2 class="admin-heading">Admin Panel</h2>
+        <ul>
+            <li><a href="{{ url_for('admin_dashboard') }}">Dashboard</a></li>
+            <li><a href="{{ url_for('manage_events') }}">Events</a></li>
+            <li><a href="{{ url_for('add_event') }}">Add Event</a></li>
+            <li><a href="{{ url_for('admin_bookings') }}">Bookings</a></li>
+            <li><a href="{{ url_for('admin_users') }}">Users</a></li>
+            <li><a href="{{ url_for('admin_reports') }}">Reports</a></li>
+            <li><a href="{{ url_for('admin_profile') }}">Profile</a></li>
+            <li><a href="{{ url_for('logout') }}" class="logout-btn">Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+        <div class="page-header">
+            <h2>Reports</h2>
+            <span class="breadcrumb">Dashboard / Reports</span>
+        </div>
+
+        {% if success %}
+            <div class="success-message">{{ success }}</div>
+        {% endif %}
+
+        <!-- TOTAL REPORTS -->
+        <div class="section-summary">
+            <h3>Total Reports: {{ reports|length }}</h3>
+        </div>
+
+        <!-- SEARCH + CLEAR -->
+        <form method="GET" action="{{ url_for('admin_reports') }}" class="search-form">
+            
+            <input type="text" name="search" placeholder="Search by user or issue"
+                   class="search-input">
+
+            <button type="submit" class="btn btn-add">
+                Search
+            </button>
+
+            <a href="{{ url_for('admin_reports') }}" class="btn btn-delete">
+                Clear
+            </a>
+
+        </form>
+
+        <!-- TABLE -->
+        <div class="form-card">
+
+            <table>
+    <thead>
+        <tr>
+            <th>No</th>
+            <th>User Name</th>
+            <th>Email</th>
+            <th>Event</th>
+            <th>Campus</th>
+            <th>Subject</th>
+            <th>Message</th>
+            <th>Date</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for r in reports %}
+        <tr>
+            <td>{{ loop.index }}</td>
+
+            <td>{{ r.user.first_name }} {{ r.user.last_name }}</td>
+            <td>{{ r.user.email }}</td>
+
+            <td>{{ r.event_name }}</td>
+            <td>{{ r.campus }}</td>
+
+            <td>{{ r.subject }}</td>
+            <td>{{ r.message }}</td>
+
+            <td>{{ r.created_at }}</td>
+
+            <td>
+                <a href="{{ url_for('delete_report', report_id=r.id) }}"
+                   class="btn btn-delete">
+                   Delete
+                </a>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="9">No reports found</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+        </div>
+
+    </div>
+
+</div>
+    {% include 'chatbot.html' %}
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

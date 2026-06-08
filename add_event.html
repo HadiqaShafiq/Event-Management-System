@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Add Event | Admin</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='images/favicon.png') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <div class="logo">
+          <img
+            src="{{ url_for('static', filename=admin_logo_filename) }}"
+            alt="Admin Profile"
+          />
+        </div>
+        <h2 class="admin-heading">Admin Panel</h2>
+        <ul>
+          <li>
+            <a href="{{ url_for('admin_dashboard') }}#overview-section"
+              >Dashboard</a
+            >
+          </li>
+          <li>
+            <a href="{{ url_for('manage_events') }}#events-section">Events</a>
+          </li>
+          <li><a href="{{ url_for('add_event') }}">Add Event</a></li>
+          <li>
+            <a href="{{ url_for('admin_bookings') }}#bookings-section"
+              >Bookings</a
+            >
+          </li>
+          <li>
+            <a href="{{ url_for('admin_users') }}#users-section">Users</a>
+          </li>
+          <li>
+            <a href="{{ url_for('admin_reports') }}#issues-section"
+              >Reports</a
+            >
+          </li>
+          <li>
+            <a href="{{ url_for('admin_profile') }}">Profile</a>
+          </li>
+          <li>
+            <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- RIGHT SIDE CONTENT -->
+      <div class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+          <h2>Add Events</h2>
+          <span class="breadcrumb">Dashboard / Add Form</span>
+        </div>
+
+        {% if error %}
+          <div class="error-message">{{ error }}</div>
+        {% endif %}
+
+        <!-- FORM CARD -->
+        <div class="form-card">
+          <form method="POST" enctype="multipart/form-data">
+            <div class="form-grid">
+              <div>
+                <label>Event Name*</label>
+                <input type="text" name="title" required />
+              </div>
+              <div>
+                <label>Resource Person*</label>
+                <input type="text" name="title" required />
+              </div>
+              <div>
+    <label>Phone number*</label>
+    <input type="text" name="phone" required />
+</div>
+              <div>
+                <label>Category Name*</label>
+                <select name="category" required>
+                  <option value="">Select Category</option>
+                  <option>Conference</option>
+                  <option>Workshop</option>
+                  <option>Seminar</option>
+                  <option>Other</option>
+                </select>
+              </div>
+
+              <div>
+                <label>Venue*</label>
+                <input type="text" name="venue" required />
+              </div>
+
+              <div>
+                <label>Pincode*</label>
+                <input type="text" name="pincode" placeholder="Optional" />
+              </div>
+
+              <div>
+                <label>Campus*</label>
+                <select name="city" required>
+                  <option value="">Select Campus</option>
+                  <option>Main Campus</option>
+                  <option>Parus Campus</option>
+                  <option>Tobba Campus</option>
+                  <option>Others</option>
+                </select>
+              </div>
+
+              <div>
+                <label>Event Payment</label>
+                <input type="number" name="price" min="0" step="0.01" placeholder="Leave empty for free event" />
+              </div>
+
+              <div>
+                <label>Start Date*</label>
+                <input type="date" name="start_date" min="{{ today_string() }}" required />
+              </div>
+
+              <div>
+                <label>End Date*</label>
+                <input type="date" name="end_date" min="{{ today_string() }}" required />
+              </div>
+            </div>
+
+     <div class="file-upload-box">
+  <label class="file-label">Upload Image (Optional)</label>
+
+  <div class="file-input-wrapper">
+
+    <input type="file" id="imageUpload" name="image" accept="image/*" />
+
+    <label for="imageUpload" class="file-custom-btn">
+      Choose Image
+    </label>
+
+    <span id="file-name">No image selected</span>
+
+  </div>
+</div>
+
+            <div class="form-full">
+              <label>Details*</label>
+              <textarea name="description" rows="4" required></textarea>
+            </div>
+
+            <button type="submit" class="btn-primary">Add Event</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% include 'chatbot.html' %}
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  </body>
+</html>
+

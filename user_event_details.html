@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Event Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<div class="dashboard-container">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="logo">
+            <img src="{{ url_for('static', filename=user_logo_filename) }}" alt="User Profile">
+        </div>
+
+        <h2 class="user-heading">User Panel</h2>
+
+        <ul>
+            <li><a href="{{ url_for('user_dashboard') }}">Dashboard</a></li>
+            <li><a href="{{ url_for('user_events') }}" class="active">Events</a></li>
+            <li><a href="{{ url_for('user_bookings') }}">My Bookings</a></li>
+            <li><a href="{{ url_for('user_reports') }}">Report Event</a></li>
+            <li><a href="{{ url_for('user_profile') }}">Profile</a></li>
+            <li><a href="{{ url_for('logout') }}" class="logout-btn">Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+        <!-- HEADER -->
+        <div class="page-header">
+            <h2>{{ event.title }}</h2>
+            <span class="breadcrumb">Home / Events / Details</span>
+        </div>
+
+        <!-- EVENT CARD -->
+        <div class="event-container">
+
+            <!-- IMAGE -->
+            <div class="event-image">
+                {% if event.image %}
+                    <img src="{{ url_for('static', filename='uploads/' + event.image) }}">
+                {% else %}
+                    <img src="{{ url_for('static', filename='images/default-event.jpg') }}">
+                {% endif %}
+            </div>
+
+            <!-- DETAILS -->
+            <div class="event-details">
+
+                <div class="detail-item"><strong>Category:</strong> {{ event.category }}</div>
+                <div class="detail-item"><strong>Venue:</strong> {{ event.venue }}</div>
+                <div class="detail-item"><strong>City:</strong> {{ event.city }}</div>
+                <div class="detail-item"><strong>Pincode:</strong> {{ event.pincode or 'N/A' }}</div>
+                <div class="detail-item"><strong>Phone:</strong> {{ event.phone or 'N/A' }}</div>
+                <div class="detail-item"><strong>Start Date:</strong> {{ event.start_date }}</div>
+                <div class="detail-item"><strong>End Date:</strong> {{ event.end_date }}</div>
+                <div class="detail-item">
+                    <strong>Status:</strong>
+                    {% if event_has_ended(event) %}
+                        <span class="status-badge status-ended">Ended</span>
+                    {% elif event_status_label(event) == 'Ongoing' %}
+                        <span class="status-badge status-approved">Ongoing</span>
+                    {% else %}
+                        <span class="status-badge status-pending">Upcoming</span>
+                    {% endif %}
+                </div>
+
+                <div class="price">
+                    {% if event.price and event.price > 0 %}
+                        Rs {{ event.price }}
+                    {% else %}
+                        Free Event
+                    {% endif %}
+                </div>
+
+                <div class="description">
+                    <strong>Description:</strong><br><br>
+                    {{ event.description }}
+                </div>
+
+                <!-- BUTTONS -->
+                <div class="event-actions">
+
+                    {% if event_has_ended(event) %}
+                        <button class="btn btn-disabled" disabled>
+                            Event Ended
+                        </button>
+                    {% else %}
+                        <a href="{{ url_for('book_event', event_id=event.id) }}" class="btn btn-book">
+                            Book Now
+                        </a>
+                    {% endif %}
+
+                    <!-- SMART BACK BUTTON -->
+                    <button type="button" data-history-back class="btn btn-delete">
+                        Back
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+    {% include 'chatbot.html' %}
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
